@@ -15,11 +15,10 @@ import (
 type JsonData struct {
 	Args   []string
 	Global map[string]string
-	Vars   map[string]string
+	Vars   map[string]interface{}
 }
 
 func HandleConnection(conn net.Conn, output string) {
-	var jsonData JsonData
 	defer conn.Close()
 
 	// open file for writing JSON data
@@ -58,6 +57,7 @@ func HandleConnection(conn net.Conn, output string) {
 			}
 			return
 		} else {
+            jsonData := JsonData{}
 			json.Unmarshal(buf, &jsonData)
 			fmt.Fprintf(writer, "JSON: %#v\n", jsonData)
 			writer.Flush()
